@@ -10,8 +10,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class ConsumerDemoWithShutDown {
-
+public class ConsumerDemoCooperative {
     private static final Logger log = LoggerFactory.getLogger(ProducerDemo.class.getSimpleName());
 
     public static void main(String[] args) {
@@ -27,6 +26,7 @@ public class ConsumerDemoWithShutDown {
 
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, CooperativeStickyAssignor.class.getName());
 
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty("auto.offset.reset", "earliest");
@@ -46,7 +46,6 @@ public class ConsumerDemoWithShutDown {
                     throw new RuntimeException(e);
                 }
             }
-
         });
 
         try {
@@ -72,5 +71,5 @@ public class ConsumerDemoWithShutDown {
             consumer.close();
             log.info("consumer shutting down gracefully");
         }
-    }
 }
+    }
